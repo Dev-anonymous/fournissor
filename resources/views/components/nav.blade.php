@@ -46,7 +46,7 @@
                             }
                             if ($user->user_role == 'user') {
                                 $href = route('user.profile');
-                                $dah = route('user.devis');
+                                $dah = route('user.service-request');
                             }
                         @endphp
                     @endauth
