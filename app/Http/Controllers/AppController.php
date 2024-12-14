@@ -12,6 +12,8 @@ use App\Models\Pay;
 use App\Models\Pending;
 use App\Models\Product;
 use App\Models\Profil;
+use App\Models\Service;
+use App\Models\Servicerequest;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -314,5 +316,46 @@ class AppController extends Controller
         $data = $data->get();
 
         return $data;
+    }
+
+    function demandeservice()
+    {
+        $user = auth()->user();
+        if ($user->user_role != 'user') {
+            return ['message' => "Vous n’êtes pas autorité à effectuer cette action."];
+        }
+        $rules =  [
+            'yes' => 'required|in:OUI,NON',
+            'description' => 'required|max:10000',
+        ];
+        $validator = Validator::make(request()->all(), $rules);
+        if ($validator->fails()) {
+            return [
+                'message' => implode(" ", $validator->errors()->all())
+            ];
+        }
+        $data  = $validator->validated();
+        $budget = request('budget');
+        $service_id = request('service_id');
+
+        if ('OUI' == request('yes')) {
+            if ($budget <= 0) {
+                return [
+                    'message' => "Veuillez renseigner votre budget prévu ou estimatif du service."
+                ];
+            }
+        }
+
+        $d['description'] = request('description');
+        $d['budget'] = (float) $budget;
+        if ($service_id) {
+            $d['service_id'] = $service_id;
+            $d['servicename'] = Service::where('id', $service_id)->first()->service;
+        }
+        $d['date'] = nnow();
+        $d['users_id'] = auth()->user()->id;
+        Servicerequest::create($d);
+
+        return ['success' => true, 'message' => "Votre demande a été soumise et sera traitée sous peu. Merci."];
     }
 }

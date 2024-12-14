@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon|null $date
  * 
  * @property Business $business
- * @property Collection|Devi[] $devis
+ * @property Collection|Servicerequest[] $servicerequests
  *
  * @package App\Models
  */
@@ -48,8 +48,8 @@ class Service extends Model
 		return $this->belongsTo(Business::class);
 	}
 
-	public function devis()
+	public function servicerequests()
 	{
-		return $this->hasMany(Devi::class);
+		return $this->hasMany(Servicerequest::class);
 	}
 }

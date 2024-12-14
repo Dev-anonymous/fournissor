@@ -52,6 +52,7 @@ class ServiceAPIController extends Controller
             ];
         }
         $data  = $validator->validated();
+        $data['service'] = ucfirst($data['service']);
 
         $busi = $user->businesses->first();
         $data['business_id'] = $busi->id;
@@ -103,6 +104,7 @@ class ServiceAPIController extends Controller
             $data['image'] = request('image')->store('service', 'public');
             File::delete('storage/' . $service->image);
         }
+        $data['service'] = ucfirst($data['service']);
         $service->update($data);
 
         return ['success' => true, 'message' => "Service mis à jour."];
@@ -120,9 +122,9 @@ class ServiceAPIController extends Controller
         abort_if('provider' != $user->user_role, 403);
         abort_if($user->id != $service->business->users_id, 403);
 
-        $n = $service->devis()->count();
+        $n = $service->servicerequests()->count();
         if ($n) {
-            return ['success' => false, 'message' => 'Ce service contient ' . $n . ' Devis.'];
+            return ['success' => false, 'message' => 'Ce service est lié à ' . $n . ' demande(s) de service.'];
         }
 
         File::delete('storage/' . $service->image);

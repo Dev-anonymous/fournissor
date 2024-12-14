@@ -35,7 +35,7 @@
                             <span ldr></i></span>
                         </div>
                     </div>
-                    <div class="col-xxl-6 col-xl-12">
+                    <div class="col-xxl-6 col-xl-12 d-none">
                         <div class="row">
                             <div class="col-lg-6 col-sm-6 col-md-6 col-xl-6">
                                 <a href="{{ route('admin.home') }}">
@@ -165,7 +165,7 @@
 
                         </div>
                     </div>
-                    <div class="col-xxl-6 col-xl-12">
+                    <div class="col-xxl-6 col-xl-12 d-none">
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="card custom-card">

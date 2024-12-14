@@ -30,7 +30,7 @@ Route::get('/login', function () {
         } elseif ($role == 'provider') {
             $url = route('business.service');
         } elseif ($role == 'user') {
-            $url = route('user.devis');
+            $url = route('user.service-request');
         } else {
             Auth::logout();
             abort(403, "Invalide user role : $role");
@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
             Route::get('admins',  'admins')->name('admin.admins');
             Route::get('category',  'category')->name('admin.category');
             Route::get('service',  'service')->name('admin.service');
+            Route::get('service-request',  'service_request')->name('admin.service-request');
         });
     });
 
@@ -68,13 +69,13 @@ Route::middleware('auth')->group(function () {
         Route::controller(BusinessController::class)->group(function () {
             // Route::get('',  'home')->name('business.home');
             Route::get('service',  'service')->name('business.service');
-            Route::get('devis',  'devis')->name('business.devis');
+            Route::get('service-request',  'service_request')->name('business.service-request');
             Route::get('profile',  'profile')->name('business.profile');
         });
     });
     Route::prefix('user')->group(function () {
-        Route::controller(BusinessController::class)->group(function () {
-            Route::get('devis',  'devis')->name('user.devis');
+        Route::controller(UserController::class)->group(function () {
+            Route::get('service-request',  'service_request')->name('user.service-request');
             Route::get('profile',  'profile')->name('user.profile');
         });
     });

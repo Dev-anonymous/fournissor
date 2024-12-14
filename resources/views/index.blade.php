@@ -251,7 +251,9 @@
                                         class="img-responsive" width="100%" style="height:200px !important" />
                                     <div class="contents">
                                         <div class="text-center" style="height: 300px; overflow: auto;">
-                                            <h4>{{ $el->service }}</h4>
+                                            <h4 service{{ $el->id }}>
+                                                {{ $el->service }}
+                                            </h4>
                                             <p>
                                                 {{ $el->description }}
                                             </p>
@@ -266,7 +268,7 @@
                                                         class="mb-3 rounded-circle">
                                                 </div>
                                                 <div class="">
-                                                    <b>
+                                                    <b business{{ $el->id }}>
                                                         {{ $el->business->businessname }}
                                                     </b>
                                                     <br>
@@ -400,39 +402,72 @@
         <x-footer-web />
     </div>
 
-    <div id="mdl1" class="modal fade" role="dialog">
+    <div id="mdl1" class="modal fade" role="dialog" data-backdrop="static">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Modal Header</h4>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Demande du service</h4>
+                </div>
+                <form action="#" id="fserv">
+                    <div class="modal-body">
+                        <input type="hidden" name="service_id">
+                        <div class="jumbotron" style="padding: 10px" id="servicediv"></div>
+                        <div class="form-group">
+                            <label>
+                                Avez-vous un budget prévu ou estimatif pour ce service
+                                ?
+                            </label>
+                            <select id="sbudget" name="yes">
+                                <option>NON</option>
+                                <option>OUI</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="budgetdiv" style="display: none">
+                            <label for="">Quel est votre budget (USD)</label>
+                            <input type="number" class="form-control" min="0" name="budget">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Veuillez décrire votre besoin en détail.
+                            </label>
+                            <textarea class="form-control" rows="10" name="description" required maxlength="10000"
+                                placeholder="Description du service"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div id="rep"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary"><span></span> Valider</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-body">
-              <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
 
         </div>
-      </div>
-    <div class="modal fade" id="mdl0">
-        <div class="modal-dialog modal-sm text-center" role="document">
-            <div class="modal-content modal-content-demo">
-                <div class="modal-body text-start p-5">
+    </div>
+
+    <div id="mdl0" class="modal fade" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center">
                     <p class="h4">Veuillez vous connecter avant de soumettre une demande.</p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-light btn-sm" data-dismiss="modal" type="button"> <i
-                            class="fa fa-times-circle"></i> Annuler</button>
+                    <button class="btn btn-light btn-sm" data-dismiss="modal" type="button">
+                        <i class="fa fa-times-circle"></i> Annuler
+                    </button>
                     <a href="#" url class="btn btn-primary btn-sm" type="submit">
                         <span class="fa fa-user"></span>
-                        Je me connecter</a>
+                        Je me connecte
+                    </a>
                 </div>
             </div>
+
         </div>
     </div>
+
 
     <x-js-file-web />
     <script src="{{ asset('assets/phone/intlTelInput.js') }}"></script>
@@ -562,17 +597,6 @@
         });
 
         function showmdl(service) {
-            console.log(service);
-            if (service) {
-                $('#mdl1').modal('show');
-            } else {
-                $('#mdl1').modal('show');
-            }
-        }
-
-        $('.myservice').click(function() {
-            event.preventDefault();
-            var service = $(this).attr('service');
             var ok = Number('{{ null !== auth()->user() ? 1 : 0 }}');
             if (!ok) {
                 var url = '{{ route('login', ['r' => route('home', ['subscribe' => ''])]) }}' + (service ?? '');
@@ -580,9 +604,22 @@
                 $('#mdl0').modal('show');
                 return;
             }
+            if (service) {
+                var sn = $(`[service${service}]`).text().trim();
+                var bn = $(`[business${service}]`).text().trim();
+                $('#servicediv').html(`<h3 class='m-0'>Service : ${sn}</h3><h3>Entreprise : ${bn}</h3>`);
+            } else {
+                $('#servicediv').html('');
+                $('#servicediv').html();
+            }
+            $('[name="service_id"]').val(service);
+            $('#mdl1').modal('show');
+        }
 
+        $('.myservice').click(function() {
+            event.preventDefault();
+            var service = $(this).attr('service');
             showmdl(service);
-
         });
         var scroll = Number('{{ request()->has('subscribe') ? 1 : 0 }}');
         var sid = Number('{{ request('subscribe') }}');
@@ -594,6 +631,60 @@
             );
             showmdl(sid);
         }
+
+        var sbudget = $('#sbudget');
+        sbudget.change(function() {
+            tog();
+        })
+
+        function tog() {
+            var yes = sbudget.val();
+            if ('OUI' == yes) {
+                $('#budgetdiv').slideDown();
+            } else {
+                $('#budgetdiv').slideUp();
+            }
+        }
+        tog();
+
+        $('#fserv').submit(function() {
+            event.preventDefault();
+            var form = $(this);
+            var rep = $('#rep', form);
+            rep.html('');
+
+            var btn = $(':submit', form);
+            btn.attr('disabled', true);
+            btn.find('span').removeClass().addClass('fa fa-spin fa-spinner');
+            var d = form.serialize();
+
+            $.ajax({
+                type: 'post',
+                data: d,
+                url: '{{ route('demandeservice') }}',
+                success: function(r) {
+                    if (r.success) {
+                        btn.attr('disabled', false);
+                        rep.removeClass().addClass('text-success');
+                        form.get(0).reset();
+                        window.history.pushState({}, null, '{{ route('home') }}');
+                        setTimeout(() => {
+                            $('.modal').modal('hide');
+                        }, 5000);
+                    } else {
+                        btn.attr('disabled', false);
+                        rep.removeClass().addClass('text-danger');
+                    }
+                    btn.find('span').removeClass();
+                    rep.html(r.message);
+                },
+                error: function(r) {
+                    btn.attr('disabled', false);
+                    btn.find('span').removeClass();
+                    alert("une erreur s'est produite");
+                }
+            });
+        });
     </script>
 
 </body>

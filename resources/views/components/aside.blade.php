@@ -59,7 +59,7 @@
                         </ul>
                     </li>
                     @php
-                        $cl = Route::is('admin.service') ? 'active open' : '';
+                        $cl = (Route::is('admin.service') or Route::is('admin.service-request')) ? 'active open' : '';
                     @endphp
                     <li class="slide has-sub {{ $cl }}">
                         <a href="javascript:void(0);" class="side-menu__item {{ $cl }}">
@@ -70,6 +70,10 @@
                         <ul class="slide-menu child1">
                             <li class="slide side-menu__label1">
                                 <a href="javascript:void(0)">Services</a>
+                            </li>
+                            <li class="slide">
+                                <a href="{{ route('admin.service-request') }}"
+                                    class="side-menu__item @if (Route::is('admin.service-request')) active @endif">Demande de service</a>
                             </li>
                             <li class="slide">
                                 <a href="{{ route('admin.service') }}"
@@ -161,7 +165,10 @@
                 @endif
                 @if ('provider' == $role)
                     @php
-                        $cl = (Route::is('business.service') or Route::is('business.devis')) ? 'active open' : '';
+                        $cl =
+                            (Route::is('business.service') or Route::is('business.service-request'))
+                                ? 'active open'
+                                : '';
                     @endphp
                     <li class="slide has-sub {{ $cl }}">
                         <a href="javascript:void(0);" class="side-menu__item {{ $cl }}">
@@ -178,8 +185,9 @@
                                     class="side-menu__item @if (Route::is('business.service')) active @endif">Services</a>
                             </li>
                             <li class="slide">
-                                <a href="{{ route('business.devis') }}"
-                                    class="side-menu__item @if (Route::is('business.devis')) active @endif">Devis</a>
+                                <a href="{{ route('business.service-request') }}"
+                                    class="side-menu__item @if (Route::is('business.service-request')) active @endif">Deamnde
+                                    de service</a>
                             </li>
                         </ul>
                     </li>
@@ -199,6 +207,47 @@
                             <li class="slide">
                                 <a href="{{ route('business.profile') }}"
                                     class="side-menu__item @if (Route::is('business.profile')) active @endif">Profil</a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+                @if ('user' == $role)
+                    @php
+                        $cl = Route::is('user.service-request') ? 'active open' : '';
+                    @endphp
+                    <li class="slide has-sub {{ $cl }}">
+                        <a href="javascript:void(0);" class="side-menu__item {{ $cl }}">
+                            <i class="bx bx-home side-menu__icon"></i>
+                            <span class="side-menu__label">Dashboard </span>
+                            <i class="fe fe-chevron-right side-menu__angle"></i>
+                        </a>
+                        <ul class="slide-menu child1">
+                            <li class="slide side-menu__label1">
+                                <a href="javascript:void(0)">Dashboard</a>
+                            </li>
+                            <li class="slide">
+                                <a href="{{ route('user.service-request') }}"
+                                    class="side-menu__item @if (Route::is('user.service-request')) active @endif">Demande
+                                    de service</a>
+                            </li>
+                        </ul>
+                    </li>
+                    @php
+                        $cl = Route::is('user.profile') ? 'active open' : '';
+                    @endphp
+                    <li class="slide has-sub {{ $cl }}">
+                        <a href="javascript:void(0);" class="side-menu__item {{ $cl }}">
+                            <i class="bx bxs-cog side-menu__icon"></i>
+                            <span class="side-menu__label">Paramètres</span>
+                            <i class="fe fe-chevron-right side-menu__angle"></i>
+                        </a>
+                        <ul class="slide-menu child1">
+                            <li class="slide side-menu__label1">
+                                <a href="javascript:void(0)">Paramètres</a>
+                            </li>
+                            <li class="slide">
+                                <a href="{{ route('user.profile') }}"
+                                    class="side-menu__item @if (Route::is('user.profile')) active @endif">Profil</a>
                             </li>
                         </ul>
                     </li>

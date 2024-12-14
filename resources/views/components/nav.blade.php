@@ -44,6 +44,10 @@
                                 $href = route('business.profile');
                                 $dah = route('business.service');
                             }
+                            if ($user->user_role == 'user') {
+                                $href = route('user.profile');
+                                $dah = route('user.devis');
+                            }
                         @endphp
                     @endauth
                     <li class="dropdown">

@@ -32,6 +32,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property User|null $user
  * @property Collection|Business[] $businesses
  * @property Collection|Devi[] $devis
+ * @property Collection|Servicerequest[] $servicerequests
  * @property Collection|User[] $users
  *
  * @package App\Models
@@ -79,6 +80,11 @@ class User extends Authenticatable
     public function devis()
     {
         return $this->hasMany(Devi::class, 'users_id');
+    }
+
+    public function servicerequests()
+    {
+        return $this->hasMany(Servicerequest::class, 'users_id');
     }
 
     public function users()
