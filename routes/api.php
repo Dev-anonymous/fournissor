@@ -27,4 +27,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::post('contact', [AppController::class, 'contact'])->name('contact');
-// Route::post('search', [AppController::class, 'search'])->name('search');
+Route::post('search', [AppController::class, 'search'])->name('search');
