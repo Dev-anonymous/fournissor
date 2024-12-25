@@ -8,6 +8,141 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title> Accueil | {{ config('app.name') }}</title>
     <x-css-file-web />
+    <style>
+        @charset "UTF-8";
+
+        .stepper .nav-tabs {
+            position: relative;
+        }
+
+        .stepper .nav-tabs>li {
+            width: 25%;
+            position: relative;
+        }
+
+        .stepper .nav-tabs>li:after {
+            content: '';
+            position: absolute;
+            background: #f1f1f1;
+            display: block;
+            width: 100%;
+            height: 5px;
+            top: 30px;
+            left: 50%;
+            z-index: 1;
+        }
+
+        .stepper .nav-tabs>li.completed::after {
+            background: #1e59ae;
+        }
+
+        .stepper .nav-tabs>li:last-child::after {
+            background: transparent;
+        }
+
+        .stepper .nav-tabs>li.active:last-child .round-tab {
+            background: #1e59ae;
+        }
+
+        .stepper .nav-tabs>li.active:last-child .round-tab::after {
+            content: '✔';
+            color: #fff;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top: 0;
+            display: block;
+        }
+
+        .stepper .nav-tabs [data-toggle='tab'] {
+            width: 25px;
+            height: 25px;
+            margin: 20px auto;
+            border-radius: 100%;
+            border: none;
+            padding: 0;
+            color: #f1f1f1;
+        }
+
+        .stepper .nav-tabs [data-toggle='tab']:hover {
+            background: transparent;
+            border: none;
+        }
+
+        .stepper .nav-tabs>.active>[data-toggle='tab'],
+        .stepper .nav-tabs>.active>[data-toggle='tab']:hover,
+        .stepper .nav-tabs>.active>[data-toggle='tab']:focus {
+            color: #1e59ae;
+            cursor: default;
+            border: none;
+        }
+
+        .stepper .tab-pane {
+            position: relative;
+            padding-top: 20px;
+        }
+
+        .stepper .round-tab {
+            width: 25px;
+            height: 25px;
+            line-height: 22px;
+            display: inline-block;
+            border-radius: 25px;
+            background: #fff;
+            border: 2px solid #1e59ae;
+            color: #1e59ae;
+            z-index: 2;
+            position: absolute;
+            left: 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .stepper .completed .round-tab {
+            background: #1e59ae;
+        }
+
+        .stepper .completed .round-tab::after {
+            content: '✔';
+            color: #fff;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            top: 0;
+            display: block;
+        }
+
+        .stepper .active .round-tab {
+            background: #fff;
+            border: 2px solid #1e59ae;
+        }
+
+        .stepper .active .round-tab:hover {
+            background: #fff;
+            border: 2px solid #1e59ae;
+        }
+
+        .stepper .active .round-tab::after {
+            display: none;
+        }
+
+        .stepper .disabled .round-tab {
+            background: #fff;
+            color: #f1f1f1;
+            border-color: #f1f1f1;
+        }
+
+        .stepper .disabled .round-tab:hover {
+            color: #4dd3b6;
+            border: 2px solid #a6dfd3;
+        }
+
+        .stepper .disabled .round-tab::after {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -403,46 +538,144 @@
     </div>
 
     <div id="mdl1" class="modal fade" role="dialog" data-backdrop="static">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                     <h4 class="modal-title">Demande du service</h4>
                 </div>
-                <form action="#" id="fserv">
-                    <div class="modal-body">
-                        <input type="hidden" name="service_id">
+                <div class="panel">
+                    <div class="panel-body">
                         <div class="jumbotron" style="padding: 10px" id="servicediv"></div>
-                        <div class="form-group">
-                            <label>
-                                Avez-vous un budget prévu ou estimatif pour ce service
-                                ?
-                            </label>
-                            <select id="sbudget" name="yes">
-                                <option>NON</option>
-                                <option>OUI</option>
-                            </select>
-                        </div>
-                        <div class="form-group" id="budgetdiv" style="display: none">
-                            <label for="">Quel est votre budget (USD)</label>
-                            <input type="number" class="form-control" min="0" name="budget">
-                        </div>
-                        <div class="form-group">
-                            <label>
-                                Veuillez décrire votre besoin en détail.
-                            </label>
-                            <textarea class="form-control" rows="10" name="description" required maxlength="10000"
-                                placeholder="Description du service"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <div id="rep"></div>
+                        <div class="stepper">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a class="persistant-disabled" href="#stepper-step-1" data-toggle="tab"
+                                        aria-controls="stepper-step-1" role="tab" title="Travaux à effectuer">
+                                        <span class="round-tab">1</span>
+                                    </a>
+                                </li>
+                                <li role="presentation" class="disabled">
+                                    <a class="persistant-disabled" href="#stepper-step-2" data-toggle="tab"
+                                        aria-controls="stepper-step-2" role="tab"
+                                        title="Expliquez votre demande">
+                                        <span class="round-tab">2</span>
+                                    </a>
+                                </li>
+                                <li role="presentation" class="disabled">
+                                    <a class="persistant-disabled" href="#stepper-step-3" data-toggle="tab"
+                                        aria-controls="stepper-step-3" role="tab" title="Adresse & budget">
+                                        <span class="round-tab">3</span>
+                                    </a>
+                                </li>
+                                <li role="presentation" class="disabled">
+                                    <a class="persistant-disabled" href="#stepper-step-4" data-toggle="tab"
+                                        aria-controls="stepper-step-4" role="tab" title="">
+                                        <span class="round-tab">4</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <form action="#" id="fserv">
+                                <input type="hidden" name="service_id">
+                                <div class="tab-content">
+                                    <div class="tab-pane fade in active" role="tabpanel" id="stepper-step-1">
+                                        <h3 class="hs">1. Quels sont les travaux à effectuer ?</h3>
+                                        <div style="margin-top: 20px">
+                                            <p class="text-danger">
+                                                <i class="fa fa-exclamation-circle"></i> Ex : Construction maison,
+                                                piscine, pavés extérieurs, clôture, …
+                                            </p>
+                                            <div divt>
+                                                <div class="form-inline" style="margin-bottom: 5px">
+                                                    <input class="form-control" placeholder="Travail à faire"
+                                                        name="traveaux[]">
+                                                </div>
+                                                <div class="form-inline" style="margin-bottom: 5px">
+                                                    <input class="form-control" placeholder="Travail à faire"
+                                                        name="traveaux[]">
+                                                </div>
+                                                <div class="form-inline" style="margin-bottom: 5px">
+                                                    <input class="form-control" placeholder="Travail à faire"
+                                                        name="traveaux[]">
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <div class="form-inline" style="margin-bottom: 5px">
+                                                    <button type="button" addt
+                                                        class="btn btn-default btn-sm">Ajouter</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li>
+                                                <a class="btn btn-primary next-step">Suivant</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-2">
+                                        <h3 class="hs">2. Expliquez votre demande</h3>
+                                        <div style="margin-top: 20px">
+                                            <div class="form-group">
+                                                <label>
+                                                    Veuillez décrire votre besoin en détail.
+                                                </label>
+                                                <textarea class="form-control" rows="10" name="description" required maxlength="10000"
+                                                    placeholder="Description du desoin"></textarea>
+                                            </div>
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li>
+                                                <a class="btn btn-default prev-step">Retour</a>
+                                            </li>
+                                            <li>
+                                                <a class="btn btn-primary next-step">Suivant</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-3">
+                                        <h3 class="hs">3. Adresse & budget</h3>
+                                        <div style="margin-top: 20px">
+                                            <div class="form-group">
+                                                <label for="">Quel est votre budget (USD)</label>
+                                                <input type="number" class="form-control" min="0"
+                                                    name="budget">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">A quelle adresse le service sera intervenu
+                                                    ?</label>
+                                                <input required class="form-control" name="adresse">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">
+                                                    A quelle date souhaitez-vous le lancement du
+                                                    service ?
+                                                </label>
+                                                <input required class="form-control" value="{{ nnow() }}"
+                                                    name="service_date" id="date">
+                                            </div>
+
+                                            <div id="rep2"></div>
+
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li>
+                                                <a class="btn btn-default prev-step" bback>Retour</a>
+                                            </li>
+                                            <li>
+                                                <a class="btn btn-primary next-step" bvalide>Valider</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane fade" role="tabpanel" id="stepper-step-4">
+                                        <div class="text-center">
+                                            <div id="rep"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary"><span></span> Valider</button>
-                    </div>
-                </form>
+                </div>
             </div>
 
         </div>
@@ -470,6 +703,8 @@
 
 
     <x-js-file-web />
+
+
     <script src="{{ asset('assets/phone/intlTelInput.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('assets/phone/intlTelInput.css') }}">
     <style>
@@ -478,7 +713,15 @@
         }
     </style>
     <script src="{{ asset('assets/js/jquery.mask.min.js') }}"></script>
+
+    <link rel="stylesheet" href="{{ asset('flatpickr/flatpickr.css') }}">
+    <script src="{{ asset('flatpickr/flatpickr.js') }}"></script>
+
     <script>
+        flatpickr("#date", {
+            minDate: "today"
+        });
+
         $('.phone').mask('0000000000000000');
         var input = document.querySelector("#phone");
         var iti = intlTelInput(input, {
@@ -632,26 +875,18 @@
             showmdl(sid);
         }
 
-        var sbudget = $('#sbudget');
-        sbudget.change(function() {
-            tog();
-        })
+        $('[bvalide]').click(function() {
+            demandeservice();
+        });
 
-        function tog() {
-            var yes = sbudget.val();
-            if ('OUI' == yes) {
-                $('#budgetdiv').slideDown();
-            } else {
-                $('#budgetdiv').slideUp();
-            }
-        }
-        tog();
-
-        $('#fserv').submit(function() {
+        function demandeservice() {
             event.preventDefault();
-            var form = $(this);
+            var form = $('#fserv');
             var rep = $('#rep', form);
-            rep.html('');
+            var rep2 = $('#rep2', form);
+            var spin = '<i class="fa fa-spinner fa-spin fa-4x text-primary"></i>';
+            rep.html(spin);
+            rep2.html('');
 
             var btn = $(':submit', form);
             btn.attr('disabled', true);
@@ -670,13 +905,18 @@
                         window.history.pushState({}, null, '{{ route('home') }}');
                         setTimeout(() => {
                             $('.modal').modal('hide');
+                            location.reload();
                         }, 5000);
                     } else {
                         btn.attr('disabled', false);
                         rep.removeClass().addClass('text-danger');
+                        rep2.removeClass().addClass('text-danger');
+                        $('[bback]').click();
+                        rep2.html(r.message);
                     }
                     btn.find('span').removeClass();
-                    rep.html(r.message);
+                    var m = `<h4><i class="fa fa-check-circle text-primary"></i> ${r.message}</h4>`;
+                    rep.html(m);
                 },
                 error: function(r) {
                     btn.attr('disabled', false);
@@ -684,6 +924,72 @@
                     alert("une erreur s'est produite");
                 }
             });
+        }
+
+        ////////////////////////////////////////////////
+        /// STEPPER ////
+
+        $('[addt]').click(function() {
+            $('[divt]').append(`
+                <div class="form-inline" style="margin-bottom: 5px">
+                    <input class="form-control" placeholder="Travail à faire"
+                        name="traveaux[]">
+                    <button class="btn btn-default btn-sm" brem><i class='fa fa-times-circle'></i></button>
+                </div>
+            `);
+            $('[brem]').off('click').click(function() {
+                $(this).closest('div').remove();
+            });
+        });
+
+
+        function triggerClick(elem) {
+            $(elem).click();
+        }
+        var $progressWizard = $('.stepper'),
+            $tab_active,
+            $tab_prev,
+            $tab_next,
+            $btn_prev = $progressWizard.find('.prev-step'),
+            $btn_next = $progressWizard.find('.next-step'),
+            $tab_toggle = $progressWizard.find('[data-toggle="tab"]'),
+            $tooltips = $progressWizard.find('[data-toggle="tab"][title]');
+
+        // To do:
+        // Disable User select drop-down after first step.
+        // Add support for payment type switching.
+
+        //Initialize tooltips
+        $tooltips.tooltip();
+
+        //Wizard
+        $tab_toggle.on('show.bs.tab', function(e) {
+            var $target = $(e.target);
+            if (!$target.parent().hasClass('active, disabled')) {
+                $target.parent().prev().addClass('completed');
+            }
+            if ($target.parent().hasClass('disabled')) {
+                return false;
+            }
+
+        });
+
+        // $tab_toggle.on('click', function(event) {
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        //     return false;
+        // });
+
+        $btn_next.on('click', function() {
+            $tab_active = $progressWizard.find('.active');
+            $tab_active.next().removeClass('disabled');
+            $tab_next = $tab_active.next().find('a[data-toggle="tab"]');
+            triggerClick($tab_next);
+        });
+        $btn_prev.click(function() {
+            $tab_active = $progressWizard.find('.active');
+            $tab_prev = $tab_active.prev().find('a[data-toggle="tab"]');
+            triggerClick($tab_prev);
         });
     </script>
 

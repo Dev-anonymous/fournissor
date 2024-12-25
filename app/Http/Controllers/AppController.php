@@ -322,13 +322,20 @@ class AppController extends Controller
     {
         $user = auth()->user();
         if ($user->user_role != 'user') {
-            return ['message' => "Vous n’êtes pas autorité à effectuer cette action."];
+            return ['message' => "Vous n'êtes pas autorité à effectuer cette action."];
         }
         $rules =  [
-            'yes' => 'required|in:OUI,NON',
+            // 'yes' => 'required|in:OUI,NON',
+            'traveaux' => 'required|array',
             'description' => 'required|max:10000',
+            'adresse' => 'required',
+            'service_date' => 'required|date',
         ];
-        $validator = Validator::make(request()->all(), $rules);
+        $validator = Validator::make(request()->all(), $rules, [
+            'description.required' => "Veuillez décrire votre besoin en détail.",
+            'adresse.required' => "A quelle adresse le service sera intervenu ?",
+        ]);
+
         if ($validator->fails()) {
             return [
                 'message' => implode(" ", $validator->errors()->all())
@@ -338,13 +345,16 @@ class AppController extends Controller
         $budget = request('budget');
         $service_id = request('service_id');
 
-        if ('OUI' == request('yes')) {
-            if ($budget <= 0) {
-                return [
-                    'message' => "Veuillez renseigner votre budget prévu ou estimatif du service."
-                ];
-            }
-        }
+        // if ('OUI' == request('yes')) {
+        //     if ($budget <= 0) {
+        //         return [
+        //             'message' => "Veuillez renseigner votre budget prévu ou estimatif du service."
+        //         ];
+        //     }
+        // }
+
+        $trav = (array) request('traveaux');
+        $trav = array_filter($trav);
 
         $d['description'] = request('description');
         $d['budget'] = (float) $budget;
@@ -353,6 +363,7 @@ class AppController extends Controller
             $d['servicename'] = Service::where('id', $service_id)->first()->service;
         }
         $d['date'] = nnow();
+        $d['works'] = json_encode(request('traveaux'));
         $d['users_id'] = auth()->user()->id;
         Servicerequest::create($d);
 

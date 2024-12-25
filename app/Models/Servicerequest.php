@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $servicename
  * @property float|null $budget
  * @property string|null $description
+ * @property Carbon|null $service_date
+ * @property string|null $works
+ * @property string|null $adresse
  * @property Carbon|null $date
  * 
  * @property Service|null $service
@@ -36,6 +39,7 @@ class Servicerequest extends Model
 		'service_id' => 'int',
 		'users_id' => 'int',
 		'budget' => 'float',
+		'service_date' => 'datetime',
 		'date' => 'datetime'
 	];
 
@@ -45,6 +49,9 @@ class Servicerequest extends Model
 		'servicename',
 		'budget',
 		'description',
+		'service_date',
+		'works',
+		'adresse',
 		'date'
 	];
 

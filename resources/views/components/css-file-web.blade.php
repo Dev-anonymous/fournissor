@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="{{ asset('ressources/plugins/fancybox/jquery.fancybox.min.css') }}" />
 <link href="{{ asset('ressources/css/style.css') }}" rel="stylesheet" />
 
-<link rel="shortcut icon" href="{{ asset('ressources/images/favicon.html') }}" type="image/x-icon" />
-<link rel="icon" href="{{ asset('ressources/images/favicon.html') }}" type="image/x-icon" />
+<link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
+<link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
 <style>
     .team-member {
         transition: transform .8s;
